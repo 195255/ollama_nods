@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ollama Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div id="chatContainer">
+        <div class="bot" id="messages"></div>
+        <div id="inputContainer">
+            <textarea id="userInput" placeholder="请输入你的消息" name="" rows="2" cols="">介绍一下你自己 你是什么模型，能干什么！</textarea>
+            <button id="sendButton"><i class="fas fa-paper-plane"></i> 发送</button>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#sendButton').on('click', async function() {
+                const userMessage = $('#userInput').val();
+                if (!userMessage) return;
+
+                // 添加用户消息
+                $('#messages').append(`<div class="user">${userMessage}</div>`);
+                $('#userInput').val('');
+
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: userMessage })
+                });
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n');
+
+                    lines.forEach(line => {
+                        if (line.startsWith('data: ')) {
+                            const content = line.slice(6).trim();
+                            console.log('回复内容:', content);  // 输出回复内容
+
+                            if (content) {
+                                // 直接添加回复内容，不做转换
+                                $('#messages').append(`${content}`);
+                                $('#messages').scrollTop($('#messages')[0].scrollHeight);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

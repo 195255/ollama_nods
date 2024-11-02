@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ollama Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #chatContainer {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #messages {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #userInput {
+            width: calc(100% - 22px);
+            padding: 10px;
+        }
+        button {
+            padding: 10px 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chatContainer">
+        <div id="messages"></div>
+        <input type="text" id="userInput" placeholder="请输入你的消息">
+        <button id="sendButton">发送</button>
+    </div>
+
+<script>
+    const messagesContainer = document.getElementById('messages');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+
+    sendButton.addEventListener('click', async () => {
+        const userMessage = userInput.value;
+        if (!userMessage) return;
+
+        messagesContainer.innerHTML += `<div><strong>你:</strong> ${userMessage}</div>`;
+        userInput.value = '';
+
+        try {
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: userMessage })
+            });
+
+            const data = await response.json();
+            messagesContainer.innerHTML += `<div><strong>Ollama:</strong> ${data.content}</div>`;
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        } catch (error) {
+            messagesContainer.innerHTML += `<div><strong>错误:</strong> ${error.message}</div>`;
+        }
+    });
+</script>
+
+</body>
+</html>

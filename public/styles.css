@@ -1,0 +1,110 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4f7;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#chatContainer {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* 最大宽度为600px */
+    width: 100%; /* 占满100%宽度 */
+    display: flex;
+    flex-direction: column; /* 垂直堆叠子元素 */
+    height: 100%; /* 确保容器占据100%的高度 */
+}
+
+/* 媒体查询以提高在移动设备上的适配性 */
+@media (max-width: 768px) {
+    #chatContainer {
+        margin: 10px; /* 给容器添加一些外边距，避免与屏幕边缘紧贴 */
+        border-radius: 5px; /* 在小屏幕上缩小圆角 */
+    }
+
+    #messages {
+        height: auto; /* 允许消息区域高度自适应 */
+    }
+}
+
+
+#messages {
+    flex: 1; /* 可伸缩，填充剩余空间 */
+    overflow-y: auto;
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    width:90%;
+}
+
+#messages div {
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.user {
+    background-color: #dff0d8;
+    align-self: flex-end;
+    text-align: right;
+}
+
+.bot {
+    background-color: #f2dede;
+    align-self: flex-start;
+    text-align: left;
+}
+
+#inputContainer {
+    display: flex;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+#userInput {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+#sendButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#sendButton:hover {
+    background-color: #0056b3;
+}
+
+/* 为Markdown内容添加样式 */
+.markdown {
+    line-height: 1.5;
+}
+
+/* 滚动条样式 */
+#messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+#messages::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+#messages::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
